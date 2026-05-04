@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fix It In Prompt</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Source indicator -->
+  <div id="source-bar">
+    <span id="source-label">— no image selected —</span>
+    <button id="refresh-btn" title="Refresh selection">↺</button>
+  </div>
+
+  <!-- Tab bar -->
+  <div id="tabs">
+    <button class="tab active" data-tab="generate">Generate</button>
+    <button class="tab" data-tab="edit">Edit</button>
+    <button class="tab" data-tab="video">Video</button>
+    <button class="tab" data-tab="v2v">V2V</button>
+    <button class="tab" data-tab="history">History</button>
+    <button class="tab gear-tab" data-tab="settings" title="Settings">⚙</button>
+  </div>
+
+  <!-- Tab panels -->
+  <div id="panels">
+
+    <!-- ── Generate Image ──────────────────────────────────────────────── -->
+    <div id="panel-generate" class="panel active">
+      <label>Prompt</label>
+      <textarea id="gen-prompt" placeholder="Describe the image you want to generate…"></textarea>
+
+      <div class="field-row">
+        <label>Model</label>
+        <select id="gen-model">
+          <option>Nano Banana 2</option>
+          <option>GPT Image 2</option>
+          <option>FLUX 2 Pro</option>
+          <option>Grok Imagine</option>
+          <option>Seedream 5 Lite</option>
+          <option>Qwen Image Max</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label>Aspect</label>
+        <select id="gen-aspect">
+          <option>Auto</option>
+          <option selected>16:9</option>
+          <option>9:16</option>
+          <option>1:1</option>
+          <option>4:3</option>
+          <option>3:4</option>
+          <option>21:9</option>
+        </select>
+        <label>Count</label>
+        <select id="gen-count">
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>8</option><option>10</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label>Seed</label>
+        <input type="number" id="gen-seed" placeholder="random" min="0" style="width:100px">
+      </div>
+
+      <button id="generate-btn" class="btn-primary">Generate Image</button>
+    </div>
+
+    <!-- ── Edit Image ──────────────────────────────────────────────────── -->
+    <div id="panel-edit" class="panel">
+      <p class="note">Uses selected image from timeline or project panel.</p>
+
+      <label>Prompt</label>
+      <textarea id="edit-prompt" placeholder="Describe how to edit the selected image…"></textarea>
+
+      <p class="dim">Model: Nano Banana 2</p>
+
+      <div class="field-row">
+        <label>Aspect</label>
+        <select id="edit-aspect">
+          <option>Auto</option>
+          <option>16:9</option>
+          <option>9:16</option>
+          <option>1:1</option>
+          <option>4:3</option>
+          <option>3:4</option>
+          <option>21:9</option>
+        </select>
+        <label>Seed</label>
+        <input type="number" id="edit-seed" placeholder="random" min="0" style="width:80px">
+      </div>
+
+      <button id="edit-btn" class="btn-primary">Edit Selected Image</button>
+    </div>
+
+    <!-- ── Generate Video ─────────────────────────────────────────────── -->
+    <div id="panel-video" class="panel">
+      <p id="vid-note" class="note">Uses selected image from timeline or project panel.</p>
+
+      <label>Prompt</label>
+      <textarea id="vid-prompt" placeholder="Describe how to animate the image…"></textarea>
+
+      <div class="field-row">
+        <label>Model</label>
+        <select id="vid-model">
+          <option>Seedance 2.0</option>
+          <option>Kling 3.0</option>
+          <option>Veo 3.1</option>
+          <option>Grok Video</option>
+          <option>Hailuo 2.3</option>
+          <option>Happy Horse</option>
+        </select>
+      </div>
+
+      <div class="field-row" id="vid-res-row" style="display:none">
+        <label>Resolution</label>
+        <select id="vid-resolution">
+          <option>480p</option>
+          <option selected>720p</option>
+          <option>1080p</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label>Duration</label>
+        <select id="vid-duration">
+          <option>5s</option><option>6s</option><option>8s</option><option>10s</option>
+        </select>
+        <label>Aspect</label>
+        <select id="vid-aspect">
+          <option>16:9</option><option>9:16</option><option>1:1</option>
+          <option>4:3</option><option>3:4</option>
+        </select>
+      </div>
+
+      <div class="field-row">
+        <label>Count</label>
+        <select id="vid-count">
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>8</option><option>10</option>
+        </select>
+        <label>Seed</label>
+        <input type="number" id="vid-seed" placeholder="random" min="0" style="width:80px">
+      </div>
+
+      <button id="animate-btn" class="btn-primary">Generate Video from Selected</button>
+      <button id="animate-last-btn" class="btn-secondary">Generate Video from Last Image</button>
+    </div>
+
+    <!-- ── V2V ──────────────────────────────────────────────────────── -->
+    <div id="panel-v2v" class="panel">
+
+      <!-- Model select -->
+      <div class="field-row">
+        <label>Model</label>
+        <select id="v2v-model">
+          <option value="kling-v2v-edit">Kling O3 — Edit</option>
+          <option value="kling-v2v-reference">Kling O3 — Reference</option>
+          <option value="happy-horse-v2v">Happy Horse</option>
+        </select>
+      </div>
+
+      <!-- Resolution (shown for models that support it) -->
+      <div class="field-row" id="v2v-res-row" style="display:none">
+        <label>Resolution</label>
+        <select id="v2v-resolution">
+          <option>480p</option>
+          <option selected>720p</option>
+          <option>1080p</option>
+        </select>
+      </div>
+
+      <!-- Source video -->
+      <div class="v2v-block">
+        <div class="v2v-block-hdr">Source Video</div>
+        <div class="field-row">
+          <button id="v2v-use-sel-btn" style="flex-shrink:0;white-space:nowrap">Use Selected</button>
+          <span id="v2v-source-name" class="asset-name">— none —</span>
+          <button id="v2v-clear-src-btn" class="asset-x" title="Clear" style="display:none">×</button>
+        </div>
+        <div id="v2v-dur-line" style="display:none"></div>
+      </div>
+
+      <!-- Images + Elements (Kling only) -->
+      <div id="v2v-ref-section">
+
+        <!-- Images -->
+        <div class="v2v-block">
+          <div class="v2v-block-hdr">Images <span class="dim" style="font-weight:normal">· tag as @image1, @image2…</span></div>
+          <div id="v2v-images-list"></div>
+          <button id="v2v-add-image-btn" class="v2v-add-btn">+ Add Image</button>
+        </div>
+
+        <!-- Elements -->
+        <div class="v2v-block">
+          <div class="v2v-block-hdr">Elements <span class="dim" style="font-weight:normal">· tag as @element1, @element2…</span></div>
+          <div id="v2v-elements-list"></div>
+          <button id="v2v-add-el-btn" class="v2v-add-btn">+ Add Element</button>
+        </div>
+
+      </div><!-- /v2v-ref-section -->
+
+      <label>Prompt</label>
+      <textarea id="v2v-prompt" rows="4" placeholder="e.g. Replace the dog with @element1 walking through @image1…"></textarea>
+
+      <div class="field-row">
+        <label>Seed</label>
+        <input type="number" id="v2v-seed" placeholder="random" min="0" style="width:100px">
+      </div>
+
+      <button id="v2v-generate-btn" class="btn-primary">Generate V2V</button>
+
+    </div>
+
+    <!-- ── History ────────────────────────────────────────────────────── -->
+    <div id="panel-history" class="panel">
+      <div class="history-header">
+        <button id="history-refresh-btn">Refresh</button>
+        <span class="dim">Click a row to see prompt</span>
+      </div>
+
+      <div id="history-list"></div>
+
+      <label>Prompt (editable before reuse):</label>
+      <textarea id="history-prompt" rows="3"></textarea>
+      <div id="history-info" class="dim"></div>
+
+      <div class="btn-row">
+        <button id="hist-to-gen-btn">Use in Generate</button>
+        <button id="hist-to-edit-btn">Use in Edit</button>
+      </div>
+      <div class="btn-row">
+        <button id="hist-to-vid-btn">Use in Video</button>
+        <button id="hist-reveal-btn">Reveal in Finder</button>
+      </div>
+    </div>
+
+    <!-- ── Settings ───────────────────────────────────────────────────── -->
+    <div id="panel-settings" class="panel">
+      <label>fal.ai API Key</label>
+      <input type="password" id="api-key-input" placeholder="key:…">
+      <button id="save-key-btn" class="btn-primary">Save API Key</button>
+
+      <hr>
+
+      <label>Output Folder</label>
+      <div class="field-row">
+        <input type="text" id="output-folder" placeholder="Leave blank for project folder">
+        <button id="browse-btn" style="flex-shrink:0">Browse…</button>
+      </div>
+
+      <label>AI Sequence Name</label>
+      <input type="text" id="sequence-name" value="AI Generations">
+
+      <label>Still Image Duration (seconds)</label>
+      <input type="number" id="still-duration" value="5" min="1" max="120">
+
+      <div class="field-row" style="align-items:center;gap:8px;margin-top:8px">
+        <input type="checkbox" id="jump-to-new-clip" checked style="width:auto;margin:0">
+        <label for="jump-to-new-clip" style="margin:0;font-weight:normal">Jump to new clip when added to timeline</label>
+      </div>
+
+      <label>File Naming Template</label>
+      <div class="dim small">Tokens: {date} &nbsp; {model} &nbsp; {prompt}</div>
+      <input type="text" id="naming-template" value="{date}_{model}_{prompt}">
+
+      <button id="save-settings-btn" class="btn-primary">Save Settings</button>
+    </div>
+
+  </div><!-- /panels -->
+
+  <!-- Status area -->
+  <div id="status-area">
+    <div id="job-list"></div>
+    <div id="status-text">Ready</div>
+  </div>
+
+  <script src="js/CSInterface.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

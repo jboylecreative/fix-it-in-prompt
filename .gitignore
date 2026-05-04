@@ -1,0 +1,5 @@
+node_modules/
+installer/mac/dist/
+.DS_Store
+__MACOSX
+*.log
